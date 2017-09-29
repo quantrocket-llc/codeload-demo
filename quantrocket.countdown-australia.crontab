@@ -1,0 +1,24 @@
+# quantrocket.countdown-australia.crontab demo
+#
+# This crontab will loaded by a countdown service called
+# countdown-australia (if such a service exists).
+#
+# Each line in the crontab (other than lines beginning with #,
+# which are comments) should a consist of a cron schedule
+# expression and a command to execute on that schedule.
+#
+# Cron schedule expressions consist of five fields, as shown
+# below:
+#
+# .------------ minute (0 - 59)
+# |   .---------- hour (0 - 23)
+# |   |   .-------- day of month (1 - 31)
+# |   |   |   .------ month (1 - 12) OR jan,feb,mar,apr ...
+# |   |   |   |   .---- day of week (0 - 6) (Sunday=0 or 7)  OR sun,mon,tue,wed,thu,fri,sat
+# |   |   |   |   |
+# *   *   *   *   *   command to be executed
+
+# log a message to flightlog every Monday-Friday at 5:30 pm
+# in the timezone of the countdown-australia service (presumably
+# Australia/Sydney time)
+30 17 * * mon-fri quantrocket flightlog log 'hello from quantrocket.countdown-australia.crontab'
