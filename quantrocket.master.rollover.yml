@@ -1,0 +1,55 @@
+# quantrocket.master.rollover.yml
+#
+# This file instructs the QuantRocket master service how
+# to calculate rollover dates for futures.
+#
+# PULL REQUESTS:
+# Please help make this starter file better and more
+# complete by adding accurate rollover rules for the contracts
+# you trade. Submit pull requests to the Github repo:
+# https://github.com/quantrocket-llc/codeload-demo
+
+# each top level key is an exchange code
+GLOBEX:
+  # each second-level key is an underlying symbol
+  ES:
+    # the rollrule key defines how to derive the rollover date
+    # from the expiry/LastTradeDate; the arguments will be passed
+    # to bdateutil.relativedelta. For valid args, see:
+    # https://dateutil.readthedocs.io/en/stable/relativedelta.html
+    # https://github.com/ryanss/python-bdateutil#documentation
+    rollrule:
+      # roll 8 calendar days before expiry
+      days: -8
+    # if the same rollover rules apply to numerous futures contracts,
+    # you can save typing and enter them all at once under the same_for key
+    same_for:
+      - NQ
+      - RS
+      - YM
+  MXP:
+    # If you want QuantRocket to ignore certain contract months,
+    # you can specify the months you want (using numbers not letters)
+    # Only the March, June, Sept, and Dec MXP contracts are liquid
+    only_months:
+      - 3
+      - 6
+      - 9
+      - 12
+    rollrule:
+      # roll 7 calendar days before expiry
+      days: -7
+    same_for:
+      - GBP
+      - JPY
+      - AUD
+  HE:
+    rollrule:
+      # roll on 27th day of month prior to expiry month
+      months: -1
+      day: 27
+NYMEX:
+  RB:
+    rollrule:
+      # roll 2 business days before expiry
+      bdays: -2
