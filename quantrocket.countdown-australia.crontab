@@ -4,10 +4,11 @@
 # countdown-australia (if such a service exists).
 #
 # Each line in the crontab (other than lines beginning with #,
-# which are comments) should a consist of a cron schedule
-# expression and a command to execute on that schedule.
+# which are comments) consists of a cron schedule expression
+# and a command to execute according to that schedule.
 #
-# Cron schedule expressions consist of five fields, as shown
+# Cron schedule expressions consist of five fields, minute,
+# hour, day of month, month, and day of week, as shown
 # below:
 #
 # .------------ minute (0 - 59)
