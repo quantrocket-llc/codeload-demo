@@ -32,3 +32,29 @@ class DualMovingAverageStrategy(Moonshot):
         signals = smavgs.shift() > lmavgs.shift()
 
         return signals.astype(int)
+
+    def allocate_weights(self, signals, prices):
+        # spread our capital equally among our trades on any given day
+        weights = self.allocate_equal_weights(signals) # provided by moonshot.mixins.WeightAllocationMixin
+        return weights
+
+    def simulate_positions(self, weights, prices):
+        # we'll enter in the period after the signal
+        positions = weights.shift()
+        return positions
+
+    def simulate_gross_returns(self, positions, prices):
+        # Our return is the security's close-to-close return, multiplied by
+        # the size of our position. We must shift the positions DataFrame because
+        # we don't have a return until the period after we open the position
+        closes = prices.loc["Close"]
+        gross_returns = closes.pct_change() * positions.shift()
+        return gross_returns
+
+class DualMovingAverageStrategyETF(DualMovingAverageStrategy):
+
+    CODE = "dma-etf"
+    DB = "etf-sampler-1d"
+    LMAVG_WINDOW = 300
+    SMAVG_WINDOW = 100
+    BENCHMARK = 756733
