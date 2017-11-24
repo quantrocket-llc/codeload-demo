@@ -39,19 +39,25 @@ from zipline_extensions.pipeline.data import ReutersFinancials
 # Create a price-to-book custom pipeline factor
 class PriceBookRatio(CustomFactor):
     """
-    Calculate book value per share, defined as:
+    Custom factor that calculates price-to-book ratio.
+
+    First, calculate book value per share, defined as:
 
         (Total Assets - Total Liabilities) / Number of shares outstanding
 
-    The COA codes we'll use for these metrics are 'ATOT' (Total Assets),
+    The codes we'll use for these metrics are 'ATOT' (Total Assets),
     'LTLL' (Total Liabilities), and 'QTCO' (Total Common Shares Outstanding).
 
+    Price-to-book ratio is then calculated as:
+
+        closing price / book value per share
     """
     inputs = [
-        USEquityPricing.close,
+        USEquityPricing.close, # despite the name, this works fine for non-US equities too
         ReutersFinancials.ATOT, # total assets
         ReutersFinancials.LTLL, # total liabilities
-        ReutersFinancials.QTCO] # common shares outstanding
+        ReutersFinancials.QTCO # common shares outstanding
+    ]
     window_length = 1
 
     def compute(self, today, assets, out, closes, tot_assets, tot_liabilities, shares_out):
