@@ -37,6 +37,10 @@ class UpMinusDown(Moonshot):
     REBALANCE_INTERVAL = "M" # M = monthly; see http://pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases
 
     def get_signals(self, prices):
+        """
+        This method receives a DataFrame of prices and should return a
+        DataFrame of integer signals, where 1=long, -1=short, and 0=cash.
+        """
         closes = prices.loc["Close"]
 
         # Calculate the returns
@@ -66,25 +70,46 @@ class UpMinusDown(Moonshot):
         return signals
 
     def allocate_weights(self, signals, prices):
+        """
+        This method receives a DataFrame of integer signals (-1, 0, 1) and
+        should return a DataFrame indicating how much capital to allocate to
+        the signals, expressed as a percentage of the total capital allocated
+        to the strategy (for example, -0.25, 0, 0.1 to indicate 25% short,
+        cash, 10% long).
+        """
         weights = self.allocate_equal_weights(signals)
         return weights
 
     def simulate_positions(self, weights, prices):
+        """
+        This method receives a DataFrame of allocations and should return a
+        DataFrame of positions. This allows for modeling the delay between
+        when the signal occurs and when the position is entered, and can also
+        be used to model non-fills.
+        """
         # Enter the position in the period/day after the signal
         return weights.shift()
 
     def simulate_gross_returns(self, positions, prices):
+        """
+        This method receives a DataFrame of positions and a DataFrame of
+        prices, and should return a DataFrame of percentage returns before
+        commissions and slippage.
+        """
         # We'll enter on the open, so our return is today's open to
         # tomorrow's open
         opens = prices.loc["Open"]
+        # The return is the security's percent change over the period,
+        # multiplied by the position.
         gross_returns = opens.pct_change() * positions.shift()
         return gross_returns
 
 class USStockCommission(PerShareCommission):
     IB_COMMISSION_PER_SHARE = 0.005
 
-class UpMinusDownAmex(UpMinusDown):
+class UpMinusDownDemo(UpMinusDown):
 
-    CODE = "umd-amex"
-    DB = "amex-1d"
+    CODE = "umd-demo"
+    DB = "demo-stocks-1d"
+    TOP_N_PCT = 50
     COMMISSION_CLASS = USStockCommission
