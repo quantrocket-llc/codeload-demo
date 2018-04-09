@@ -20,6 +20,7 @@ class DualMovingAverageStrategy(Moonshot):
     CODE = "dma"
     LMAVG_WINDOW = 300
     SMAVG_WINDOW = 100
+    LOOKBACK_WINDOW = LMAVG_WINDOW
 
     def get_signals(self, prices):
         closes = prices.loc["Close"]
@@ -63,6 +64,7 @@ class DualMovingAverageFuturesStrategy(DualMovingAverageStrategy):
     DB = "demo-fut-1min"
     LMAVG_WINDOW = 200
     SMAVG_WINDOW = 50
+    LOOKBACK_WINDOW = LMAVG_WINDOW
     CONT_FUT = "concat"
     COMMISSION_CLASS = GlobexEquityEMiniFixedCommission
 
@@ -72,6 +74,7 @@ class DualMovingAverageTechGiantsStrategy(DualMovingAverageStrategy):
     DB = "tech-giants-1d"
     LMAVG_WINDOW = 300
     SMAVG_WINDOW = 100
+    LOOKBACK_WINDOW = LMAVG_WINDOW
 
 class DualMovingAverageETFStrategy(DualMovingAverageStrategy):
 
@@ -79,4 +82,5 @@ class DualMovingAverageETFStrategy(DualMovingAverageStrategy):
     DB = "etf-sampler-1d"
     LMAVG_WINDOW = 300
     SMAVG_WINDOW = 100
+    LOOKBACK_WINDOW = LMAVG_WINDOW
     BENCHMARK = 756733
