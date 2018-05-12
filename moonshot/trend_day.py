@@ -26,6 +26,7 @@ class TrendDayStrategy(Moonshot):
     DB = 'etf-sampler-15min'
     DB_TIME_FILTERS = ['14:00:00', '15:45:00']
     DB_FIELDS = ['Open','Close']
+    POSITIONS_CLOSED_DAILY = True
 
     def prices_to_signals(self, prices):
 
