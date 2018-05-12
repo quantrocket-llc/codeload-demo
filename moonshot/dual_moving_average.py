@@ -22,7 +22,7 @@ class DualMovingAverageStrategy(Moonshot):
     SMAVG_WINDOW = 100
     LOOKBACK_WINDOW = LMAVG_WINDOW
 
-    def get_signals(self, prices):
+    def prices_to_signals(self, prices):
         closes = prices.loc["Close"]
 
         # Compute long and short moving averages
@@ -34,17 +34,17 @@ class DualMovingAverageStrategy(Moonshot):
 
         return signals.astype(int)
 
-    def allocate_weights(self, signals, prices):
+    def signals_to_target_weights(self, signals, prices):
         # spread our capital equally among our trades on any given day
         weights = self.allocate_equal_weights(signals) # provided by moonshot.mixins.WeightAllocationMixin
         return weights
 
-    def simulate_positions(self, weights, prices):
+    def target_weights_to_positions(self, weights, prices):
         # we'll enter in the period after the signal
         positions = weights.shift()
         return positions
 
-    def simulate_gross_returns(self, positions, prices):
+    def positions_to_gross_returns(self, positions, prices):
         # Our return is the security's close-to-close return, multiplied by
         # the size of our position. We must shift the positions DataFrame because
         # we don't have a return until the period after we open the position
@@ -64,7 +64,6 @@ class DualMovingAverageFuturesStrategy(DualMovingAverageStrategy):
     DB = "demo-fut-1min"
     LMAVG_WINDOW = 200
     SMAVG_WINDOW = 50
-    LOOKBACK_WINDOW = LMAVG_WINDOW
     CONT_FUT = "concat"
     COMMISSION_CLASS = GlobexEquityEMiniFixedCommission
 
@@ -74,7 +73,6 @@ class DualMovingAverageTechGiantsStrategy(DualMovingAverageStrategy):
     DB = "tech-giants-1d"
     LMAVG_WINDOW = 300
     SMAVG_WINDOW = 100
-    LOOKBACK_WINDOW = LMAVG_WINDOW
 
 class DualMovingAverageETFStrategy(DualMovingAverageStrategy):
 
@@ -82,5 +80,4 @@ class DualMovingAverageETFStrategy(DualMovingAverageStrategy):
     DB = "etf-sampler-1d"
     LMAVG_WINDOW = 300
     SMAVG_WINDOW = 100
-    LOOKBACK_WINDOW = LMAVG_WINDOW
     BENCHMARK = 756733

@@ -14,6 +14,7 @@
 
 from moonshot import Moonshot
 from moonshot.commission import PerShareCommission
+from quantrocket.fundamental import get_reuters_financials_reindexed_like
 
 class HighMinusLow(Moonshot):
     """
@@ -33,7 +34,7 @@ class HighMinusLow(Moonshot):
     TOP_N_PCT = 10 # Buy/sell the bottom/top decile
     REBALANCE_INTERVAL = "M" # M = monthly; see http://pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases
 
-    def get_signals(self, prices):
+    def prices_to_signals(self, prices):
 
         # calculate book value per share, defined as:
         #
@@ -43,7 +44,7 @@ class HighMinusLow(Moonshot):
         # Liabilities), and 'QTCO' (Total Common Shares Outstanding).
 
         closes = prices.loc["Close"]
-        financials = self.get_reuters_financials(["ATOT", "LTLL", "QTCO"], reindex_like=closes)
+        financials = get_reuters_financials_reindexed_like(["ATOT", "LTLL", "QTCO"], reindex_like=closes)
         tot_assets = financials.loc["ATOT"].loc["Amount"]
         tot_liabilities = financials.loc["LTLL"].loc["Amount"]
         shares_out = financials.loc["QTCO"].loc["Amount"]
@@ -73,15 +74,15 @@ class HighMinusLow(Moonshot):
 
         return signals
 
-    def allocate_weights(self, signals, prices):
+    def signals_to_target_weights(self, signals, prices):
         weights = self.allocate_equal_weights(signals)
         return weights
 
-    def simulate_positions(self, weights, prices):
+    def target_weights_to_positions(self, weights, prices):
         # Enter the position in the period/day after the signal
         return weights.shift()
 
-    def simulate_gross_returns(self, positions, prices):
+    def positions_to_gross_returns(self, positions, prices):
         # We'll enter on the open, so our return is today's open to
         # tomorrow's open
         opens = prices.loc["Open"]

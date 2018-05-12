@@ -32,11 +32,10 @@ class UpMinusDown(Moonshot):
     CODE = "umd"
     MOMENTUM_WINDOW = 252 # rank by twelve-month returns
     RANKING_PERIOD_GAP = 22 # but exclude most recent 1 month performance
-    LOOKBACK_WINDOW = MOMENTUM_WINDOW # tell Moonshot how much data to fetch prior to the desired start date
     TOP_N_PCT = 10 # Buy/sell the top/bottom decile
     REBALANCE_INTERVAL = "M" # M = monthly; see http://pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases
 
-    def get_signals(self, prices):
+    def prices_to_signals(self, prices):
         """
         This method receives a DataFrame of prices and should return a
         DataFrame of integer signals, where 1=long, -1=short, and 0=cash.
@@ -69,7 +68,7 @@ class UpMinusDown(Moonshot):
 
         return signals
 
-    def allocate_weights(self, signals, prices):
+    def signals_to_target_weights(self, signals, prices):
         """
         This method receives a DataFrame of integer signals (-1, 0, 1) and
         should return a DataFrame indicating how much capital to allocate to
@@ -80,7 +79,7 @@ class UpMinusDown(Moonshot):
         weights = self.allocate_equal_weights(signals)
         return weights
 
-    def simulate_positions(self, weights, prices):
+    def target_weights_to_positions(self, weights, prices):
         """
         This method receives a DataFrame of allocations and should return a
         DataFrame of positions. This allows for modeling the delay between
@@ -90,7 +89,7 @@ class UpMinusDown(Moonshot):
         # Enter the position in the period/day after the signal
         return weights.shift()
 
-    def simulate_gross_returns(self, positions, prices):
+    def positions_to_gross_returns(self, positions, prices):
         """
         This method receives a DataFrame of positions and a DataFrame of
         prices, and should return a DataFrame of percentage returns before
