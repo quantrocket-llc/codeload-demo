@@ -44,7 +44,7 @@ class HighMinusLow(Moonshot):
         # Liabilities), and 'QTCO' (Total Common Shares Outstanding).
 
         closes = prices.loc["Close"]
-        financials = get_reuters_financials_reindexed_like(["ATOT", "LTLL", "QTCO"], reindex_like=closes)
+        financials = get_reuters_financials_reindexed_like(closes, ["ATOT", "LTLL", "QTCO"])
         tot_assets = financials.loc["ATOT"].loc["Amount"]
         tot_liabilities = financials.loc["LTLL"].loc["Amount"]
         shares_out = financials.loc["QTCO"].loc["Amount"]
