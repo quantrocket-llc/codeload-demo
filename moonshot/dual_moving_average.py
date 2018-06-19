@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from moonshot import Moonshot
-from moonshot.commission import FuturesCommission
 
 class DualMovingAverageStrategy(Moonshot):
 
@@ -51,21 +50,6 @@ class DualMovingAverageStrategy(Moonshot):
         closes = prices.loc["Close"]
         gross_returns = closes.pct_change() * positions.shift()
         return gross_returns
-
-class GlobexEquityEMiniFixedCommission(FuturesCommission):
-
-    IB_COMMISSION_PER_CONTRACT = 0.85
-    EXCHANGE_FEE_PER_CONTRACT = 1.18
-    CARRYING_FEE_PER_CONTRACT = 0 # Depends on equity in excess of margin requirement
-
-class DualMovingAverageFuturesStrategy(DualMovingAverageStrategy):
-
-    CODE = "dma-fut"
-    DB = "demo-fut-1min"
-    LMAVG_WINDOW = 200
-    SMAVG_WINDOW = 50
-    CONT_FUT = "concat"
-    COMMISSION_CLASS = GlobexEquityEMiniFixedCommission
 
 class DualMovingAverageTechGiantsStrategy(DualMovingAverageStrategy):
 
