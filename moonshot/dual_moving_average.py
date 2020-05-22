@@ -64,4 +64,4 @@ class DualMovingAverageETFStrategy(DualMovingAverageStrategy):
     DB = "etf-sampler-1d"
     LMAVG_WINDOW = 300
     SMAVG_WINDOW = 100
-    BENCHMARK = 756733
+    BENCHMARK = "FIBBG000BDTBL9"
